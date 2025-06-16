@@ -16,8 +16,15 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   // start
+  List<dynamic> data = [];
+
   Future<void> fetchData() async {
-    final res = await http.get(Uri.parse('https://reqres.in/api/users?page=1'));
+    final res = await http.get(Uri.parse('https://reqres.in/api/users?page=2'));
+
+    print(res.statusCode);
+    setState(() {
+      data = jsonDecode(res.body)['data'];
+    });
   }
 
   @override
@@ -31,9 +38,23 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: Scaffold(
-        appBar: AppBar(title: const Text('API in Flutter'),),
-      ),);
+        appBar: AppBar(title: const Text('API in Flutter')),
+        body: ListView.builder(
+          itemCount: data.length,
+          itemBuilder: (context, index) {
+            return ListTile(
+              leading: CircleAvatar(
+                backgroundImage: NetworkImage(data[index]['avatar']),
+              ),
+              title: Text(data[index]['first_name'] + ' ' + data[index]['last_name']) ,
+              subtitle: Text(data[index]['email']),
+              );
+          },
+        ),
+      ),
+    );
   }
 }
 // https://reqres.in/api/users?page=1
