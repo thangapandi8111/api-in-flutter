@@ -27,10 +27,25 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  Future<void> addData() async {
+    final res = await http.post(
+      Uri.parse('https://api.restful-api.dev/objects'),
+      headers : {"Content-Type": "application/json"},
+        body: jsonEncode({
+        "name": "realme",
+     
+      }),
+    );
+    print(res.statusCode);
+      print(res.body.toString());
+  }
+
+
   @override
   void initState() {
     super.initState();
-    fetchData();
+    // fetchData();
+    addData();
   }
 
   // end
@@ -48,9 +63,11 @@ class _MyAppState extends State<MyApp> {
               leading: CircleAvatar(
                 backgroundImage: NetworkImage(data[index]['avatar']),
               ),
-              title: Text(data[index]['first_name'] + ' ' + data[index]['last_name']) ,
+              title: Text(
+                data[index]['first_name'] + ' ' + data[index]['last_name'],
+              ),
               subtitle: Text(data[index]['email']),
-              );
+            );
           },
         ),
       ),
